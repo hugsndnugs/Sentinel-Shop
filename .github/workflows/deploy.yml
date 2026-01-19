@@ -1,0 +1,52 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Inject Webhook URL
+        run: |
+          # Replace placeholder in config template with actual webhook URL from secrets
+          sed "s|{{WEBHOOK_URL}}|${{ secrets.WEBHOOK_URL }}|g" scripts/config.template.js > scripts/config.js
+          
+          # Verify the replacement worked (check that placeholder is gone)
+          if grep -q "{{WEBHOOK_URL}}" scripts/config.js; then
+            echo "Error: Webhook URL placeholder was not replaced!"
+            exit 1
+          fi
+          
+          echo "Webhook URL injected successfully"
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

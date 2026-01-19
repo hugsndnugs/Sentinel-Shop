@@ -1,0 +1,29 @@
+# Sensitive configuration files
+bot.env
+*.env
+.env.local
+.env.*.local
+
+# Generated config file with webhook URL (contains secret)
+scripts/config.js
+
+# Build artifacts
+dist/
+build/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node modules (if using any build tools)
+node_modules/
+package-lock.json
+yarn.lock

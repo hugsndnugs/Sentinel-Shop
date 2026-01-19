@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Your Bot - Sentinel Bot Shop</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="container">
+                <h1 class="logo"><a href="index.html">🤖 Sentinel Bot Shop</a></h1>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#features">Features</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Order Your Custom Discord Bot</h1>
+            <p class="subtitle">Fill out the form below with your bot configuration. All information is sent securely and privately.</p>
+
+            <!-- Instructions Section -->
+            <div class="instructions-section">
+                <button class="instructions-toggle" id="instructionsToggle" aria-expanded="false">
+                    <span>📖</span>
+                    <span>How to Get Your Discord Bot Information</span>
+                    <span class="toggle-icon">▼</span>
+                </button>
+                <div class="instructions-content" id="instructionsContent" style="display: none;">
+                    <h3>Step-by-Step Guide</h3>
+                    <ol class="instructions-list">
+                        <li>
+                            <strong>Navigate to Discord Developer Portal:</strong>
+                            <p>Go to <a href="https://discord.com/developers/applications" target="_blank" rel="noopener noreferrer">https://discord.com/developers/applications</a></p>
+                            <p>Log in with your Discord account if needed.</p>
+                        </li>
+                        <li>
+                            <strong>Create or Select an Application:</strong>
+                            <p>Click "New Application" to create a new bot, or select an existing application.</p>
+                            <p>Give your application a name and click "Create".</p>
+                        </li>
+                        <li>
+                            <strong>Get Your Bot Token (DISCORD_TOKEN):</strong>
+                            <p>In the left sidebar, click on "Bot"</p>
+                            <p>Under "Token", click "Reset Token" (if creating new) or "Copy" (if token exists)</p>
+                            <p class="warning">⚠️ <strong>Important:</strong> The token is only shown once. Copy it immediately and paste it into the form below.</p>
+                        </li>
+                        <li>
+                            <strong>Get Your Client ID (DISCORD_CLIENT_ID):</strong>
+                            <p>Click on "OAuth2" in the left sidebar, then "General"</p>
+                            <p>Copy the "Client ID" value (this is a public identifier, safe to share)</p>
+                        </li>
+                        <li>
+                            <strong>Get Your Client Secret (DISCORD_CLIENT_SECRET):</strong>
+                            <p>Still in "OAuth2" → "General" section</p>
+                            <p>Under "Client Secret", click "Reset Secret" if needed (this creates a new secret)</p>
+                            <p>Copy the "Client Secret" value</p>
+                            <p class="warning">⚠️ <strong>Important:</strong> The secret is only shown once. Copy it immediately.</p>
+                        </li>
+                        <li>
+                            <strong>Set Up Redirect URI (DISCORD_REDIRECT_URI):</strong>
+                            <p>In "OAuth2" → "General" section, scroll to "Redirects"</p>
+                            <p>Click "Add Redirect"</p>
+                            <p>Enter your redirect URI (default: <code>http://localhost:50547/auth/callback</code>)</p>
+                            <p>Click "Save Changes"</p>
+                        </li>
+                    </ol>
+                    <p class="help-note">💡 <strong>Tip:</strong> Keep the Discord Developer Portal open in another tab while filling out the form below.</p>
+                </div>
+            </div>
+
+            <!-- Order Form -->
+            <form id="botOrderForm" class="order-form">
+                <div class="form-section">
+                    <h2>Customer Information</h2>
+                    <div class="form-group">
+                        <label for="customerName">Your Name <span class="required">*</span></label>
+                        <input type="text" id="customerName" name="customerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerEmail">Your Email <span class="required">*</span></label>
+                        <input type="email" id="customerEmail" name="customerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="orderNotes">Order Notes / Special Requirements</label>
+                        <textarea id="orderNotes" name="orderNotes" rows="3" placeholder="Any special requirements or notes for your bot..."></textarea>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Discord Bot Configuration</h2>
+                    <p class="section-description">All fields marked with <span class="required">*</span> are required.</p>
+
+                    <div class="form-group">
+                        <label for="discordToken">
+                            Discord Bot Token (DISCORD_TOKEN) <span class="required">*</span>
+                            <button type="button" class="help-icon" data-help="token" aria-label="Help">?</button>
+                        </label>
+                        <input type="password" id="discordToken" name="discordToken" required placeholder="Your Discord bot token">
+                        <div class="help-content" id="help-token" style="display: none;">
+                            <p><strong>Where to find:</strong> Discord Developer Portal → Your Application → Bot → Token</p>
+                            <p>Click "Reset Token" or "Copy" to get your token.</p>
+                            <p class="warning">⚠️ Token is only shown once - copy it immediately!</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="discordClientId">
+                            Discord Client ID (DISCORD_CLIENT_ID) <span class="required">*</span>
+                            <button type="button" class="help-icon" data-help="clientId" aria-label="Help">?</button>
+                        </label>
+                        <input type="text" id="discordClientId" name="discordClientId" required placeholder="Your Discord client ID">
+                        <div class="help-content" id="help-clientId" style="display: none;">
+                            <p><strong>Where to find:</strong> Discord Developer Portal → Your Application → OAuth2 → General → Client ID</p>
+                            <p>This is a public identifier, safe to share.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="discordClientSecret">
+                            Discord Client Secret (DISCORD_CLIENT_SECRET) <span class="required">*</span>
+                            <button type="button" class="help-icon" data-help="clientSecret" aria-label="Help">?</button>
+                        </label>
+                        <input type="password" id="discordClientSecret" name="discordClientSecret" required placeholder="Your Discord client secret">
+                        <div class="help-content" id="help-clientSecret" style="display: none;">
+                            <p><strong>Where to find:</strong> Discord Developer Portal → Your Application → OAuth2 → General → Client Secret</p>
+                            <p>Click "Reset Secret" if needed, then copy the secret.</p>
+                            <p class="warning">⚠️ Secret is only shown once - copy it immediately!</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="discordRedirectUri">
+                            Discord Redirect URI (DISCORD_REDIRECT_URI) <span class="required">*</span>
+                            <button type="button" class="help-icon" data-help="redirectUri" aria-label="Help">?</button>
+                        </label>
+                        <input type="text" id="discordRedirectUri" name="discordRedirectUri" required placeholder="http://localhost:50547/auth/callback" value="http://localhost:50547/auth/callback">
+                        <div class="help-content" id="help-redirectUri" style="display: none;">
+                            <p><strong>Where to set:</strong> Discord Developer Portal → Your Application → OAuth2 → General → Redirects</p>
+                            <p>Click "Add Redirect" and add this URI to your application's redirects list.</p>
+                            <p>Default value: <code>http://localhost:50547/auth/callback</code></p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="logLevel">
+                            Log Level (LOG_LEVEL) <span class="optional">(Optional)</span>
+                            <button type="button" class="help-icon" data-help="logLevel" aria-label="Help">?</button>
+                        </label>
+                        <select id="logLevel" name="logLevel">
+                            <option value="">Select log level (optional)</option>
+                            <option value="DEBUG">DEBUG</option>
+                            <option value="INFO" selected>INFO</option>
+                            <option value="WARNING">WARNING</option>
+                            <option value="ERROR">ERROR</option>
+                            <option value="CRITICAL">CRITICAL</option>
+                        </select>
+                        <div class="help-content" id="help-logLevel" style="display: none;">
+                            <p><strong>What this does:</strong> Controls how much detail your bot logs.</p>
+                            <ul>
+                                <li><strong>DEBUG:</strong> Most detailed (development)</li>
+                                <li><strong>INFO:</strong> Normal operation details (recommended)</li>
+                                <li><strong>WARNING:</strong> Only warnings and errors</li>
+                                <li><strong>ERROR:</strong> Only errors</li>
+                                <li><strong>CRITICAL:</strong> Only critical errors</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="botStatus">
+                            Bot Status (BOT_STATUS) <span class="optional">(Optional)</span>
+                            <button type="button" class="help-icon" data-help="botStatus" aria-label="Help">?</button>
+                        </label>
+                        <input type="text" id="botStatus" name="botStatus" placeholder="Watching over servers" value="Watching over servers">
+                        <div class="help-content" id="help-botStatus" style="display: none;">
+                            <p><strong>What this does:</strong> Custom status message displayed by your bot.</p>
+                            <p><strong>Examples:</strong></p>
+                            <ul>
+                                <li>"Watching over servers"</li>
+                                <li>"Playing with events"</li>
+                                <li>"Listening to commands"</li>
+                                <li>"Helping users"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-large">Submit Order</button>
+                    <p class="form-note">By submitting, you agree that your bot configuration will be used to set up your custom bot instance.</p>
+                </div>
+            </form>
+
+            <!-- Success/Error Messages -->
+            <div id="formMessage" class="form-message" style="display: none;"></div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Sentinel Bot Shop. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="scripts/config.js"></script>
+    <script src="scripts/form-handler.js"></script>
+</body>
+</html>
