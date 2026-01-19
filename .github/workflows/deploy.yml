@@ -28,6 +28,13 @@ jobs:
 
       - name: Inject Webhook URL
         run: |
+          # Check if secret is set
+          if [ -z "${{ secrets.WEBHOOK_URL }}" ]; then
+            echo "ERROR: WEBHOOK_URL secret is not set!"
+            echo "Please go to Settings → Secrets and variables → Actions and add WEBHOOK_URL"
+            exit 1
+          fi
+          
           # Replace placeholder in config template with actual webhook URL from secrets
           sed "s|{{WEBHOOK_URL}}|${{ secrets.WEBHOOK_URL }}|g" scripts/config.template.js > scripts/config.js
           
@@ -37,15 +44,71 @@ jobs:
             exit 1
           fi
           
+          # Verify config.js exists and is readable
+          if [ ! -f scripts/config.js ]; then
+            echo "Error: config.js was not created!"
+            exit 1
+          fi
+          
+          # Ensure file is readable
+          chmod 644 scripts/config.js
+          
           echo "Webhook URL injected successfully"
+          echo "config.js file size: $(wc -c < scripts/config.js) bytes"
+          echo "config.js permissions: $(ls -l scripts/config.js)"
+
+      - name: Verify config.js before upload
+        run: |
+          echo "Verifying config.js exists in workspace..."
+          ls -la scripts/
+          if [ -f scripts/config.js ]; then
+            echo "✓ config.js exists"
+            # Don't print the actual URL, just verify it's not empty and not the placeholder
+            if grep -q "{{WEBHOOK_URL}}" scripts/config.js; then
+              echo "ERROR: Placeholder still present in config.js!"
+              exit 1
+            fi
+            if [ ! -s scripts/config.js ]; then
+              echo "ERROR: config.js is empty!"
+              exit 1
+            fi
+            echo "✓ config.js is valid"
+            # Show file size and first few chars (without revealing the URL)
+            echo "File size: $(wc -c < scripts/config.js) bytes"
+          else
+            echo "ERROR: config.js does not exist!"
+            exit 1
+          fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
+
+      - name: Create deployment package
+        run: |
+          # Ensure config.js exists and is valid before packaging
+          if [ ! -f scripts/config.js ]; then
+            echo "ERROR: config.js does not exist after verification step!"
+            exit 1
+          fi
+          
+          # Create a list of files to verify they'll be included
+          echo "Files that will be included in artifact:"
+          find . -type f -name "*.html" -o -name "*.css" -o -name "*.js" | head -20
+          echo ""
+          echo "Verifying config.js is in the list:"
+          if find . -name "config.js" | grep -q "scripts/config.js"; then
+            echo "✓ config.js found in workspace"
+          else
+            echo "✗ ERROR: config.js not found!"
+            exit 1
+          fi
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
+          # upload-pages-artifact includes ALL files in the workspace,
+          # including gitignored files, so config.js will be included
 
       - name: Deploy to GitHub Pages
         id: deployment

@@ -208,7 +208,20 @@
         </div>
     </footer>
 
-    <script src="scripts/config.js"></script>
+    <script>
+        // Load config.js with error handling
+        // If it fails to load, WEBHOOK_URL will be undefined and form handler will show error
+        (function() {
+            const script = document.createElement('script');
+            script.src = 'scripts/config.js';
+            script.onerror = function() {
+                console.error('Failed to load config.js - webhook URL not configured');
+                // Set a flag so form handler knows config failed to load
+                window.CONFIG_LOAD_ERROR = true;
+            };
+            document.head.appendChild(script);
+        })();
+    </script>
     <script src="scripts/form-handler.js"></script>
 </body>
 </html>

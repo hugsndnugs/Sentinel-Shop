@@ -118,9 +118,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Check if webhook URL is configured
-            if (typeof WEBHOOK_URL === 'undefined' || WEBHOOK_URL === '{{WEBHOOK_URL}}' || !WEBHOOK_URL) {
-                showMessage('Webhook URL is not configured. Please contact the site administrator.', 'error');
-                console.error('Webhook URL not configured');
+            if (typeof WEBHOOK_URL === 'undefined' || WEBHOOK_URL === '{{WEBHOOK_URL}}' || !WEBHOOK_URL || window.CONFIG_LOAD_ERROR) {
+                showMessage('Webhook URL is not configured. Please contact the site administrator. If you are the administrator, check that the GitHub Secret WEBHOOK_URL is set and the deployment completed successfully.', 'error');
+                console.error('Webhook URL not configured. WEBHOOK_URL:', typeof WEBHOOK_URL !== 'undefined' ? WEBHOOK_URL : 'undefined');
                 return;
             }
 
